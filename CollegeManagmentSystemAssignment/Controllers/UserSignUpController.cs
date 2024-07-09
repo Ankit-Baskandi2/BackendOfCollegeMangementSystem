@@ -41,5 +41,16 @@ namespace CollegeManagmentSystemAssignment.Controllers
         {
             _userSignUpService.DeleteRecord(id);
         }
+
+        [HttpPost]
+        [Route("UserValidation")]
+        public async Task<IActionResult> UserValidation([FromBody] EmailAndPasswordModal emailAndPassword)
+        {
+            if (!ModelState.IsValid) BadRequest();
+            var result = await _userSignUpService.ValidatingUserEmailAndPassword(emailAndPassword);
+
+            if (result == 0) return Unauthorized(new { Message = "Incorrect Email and Password" });
+            return Ok(result);
+        }
     }
 }

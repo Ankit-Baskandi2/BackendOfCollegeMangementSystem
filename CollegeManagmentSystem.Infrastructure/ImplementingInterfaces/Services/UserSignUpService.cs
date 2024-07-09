@@ -33,5 +33,10 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Services
         {
             _userSignUpRepository.DeleteRecord(id);
         }
+
+        public async Task<int> ValidatingUserEmailAndPassword(EmailAndPasswordModal emailAndPassword)
+        {
+            return await _userSignUpRepository.ValidatingUserEmailAndPassword(emailAndPassword);
+        }
     }
 }

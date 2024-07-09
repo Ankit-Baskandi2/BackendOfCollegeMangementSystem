@@ -8,5 +8,6 @@ namespace CollegeManagmentSystem.Application.Interfaces.IRepositorys
         Task<IEnumerable<UserSignupModal>> GetAllSignUpDetails();
         void DeleteRecord(int id);
         Task<bool> UpdateSignUpDetails(UserSignupModal userSignupModal);
+        Task<int> ValidatingUserEmailAndPassword(EmailAndPasswordModal emailAndPassword);
     }
 }

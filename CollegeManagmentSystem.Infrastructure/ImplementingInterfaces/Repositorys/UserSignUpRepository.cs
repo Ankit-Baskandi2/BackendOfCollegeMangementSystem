@@ -98,5 +98,18 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
                 return false;
             }
         }
+
+        public async Task<int> ValidatingUserEmailAndPassword(EmailAndPasswordModal emailAndPassword)
+        {
+            using (var connection = _dapperContext.CreateConnection())
+            {
+                var query = "UP_ValidateUserLogin";
+
+                var param = new { emailAndPassword.Email, emailAndPassword.Password };
+
+                var result = await connection.QueryFirstOrDefaultAsync<int>(query, param, commandType: CommandType.StoredProcedure);
+                return result;
+            }
+        }
     }
 }
