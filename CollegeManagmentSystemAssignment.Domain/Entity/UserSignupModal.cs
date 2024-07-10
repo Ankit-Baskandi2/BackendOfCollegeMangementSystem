@@ -8,6 +8,7 @@ namespace CollegeManagmentSystemAssignment.Domain.Entity
     {
         [Key]
         public int? UserId { get; set; }
+
         [Required(ErrorMessage = "First Name is required")]
         public string? FirstName { get; set; }
 

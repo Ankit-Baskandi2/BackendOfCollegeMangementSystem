@@ -1,4 +1,5 @@
 ﻿using CollegeManagmentSystem.Application.Interfaces.IRepositorys;
+using CollegeManagmentSystem.Application.ProcedureName;
 using CollegeManagmentSystem.Infrastructure.Data;
 using CollegeManagmentSystemAssignment.Domain.Entity;
 using Dapper;
@@ -21,10 +22,11 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
             {
                 using (var connection = _dapperContext.CreateConnection())
                 {
-                    var query = "SP_SignUp_Ankit";
+                    var query = SharedProcedure.UpdateAndSaveSignUpDetails;
 
                     var parameter = new
                     {
+                        Id = userSignupModal.UserId,
                         userSignupModal.FirstName,
                         userSignupModal.LastName,
                         userSignupModal.PhoneNumber,
@@ -50,7 +52,7 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
         {
             using(var connection = _dapperContext.CreateConnection())
             {
-                var query = "UP_DelteSignUpDetail";
+                var query = SharedProcedure.DelteSignUpDetails;
                 var param = new
                 {
                     Id = id,
@@ -64,7 +66,7 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
         {
            using(var connection = _dapperContext.CreateConnection())
             {
-                var query = "UP_GetAllSignUpDetails";
+                var query = SharedProcedure.GetAllSignUpDetails;
                 return await connection.QueryAsync<UserSignupModal>(query, commandType: CommandType.StoredProcedure);
             }
         }
@@ -75,7 +77,7 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
             {
                 using(var connnection = _dapperContext.CreateConnection())
                 {
-                    var query = "UP_InsertAndUpdate";
+                    var query = SharedProcedure.UpdateAndSaveSignUpDetails;
                     var param = new
                     {
                         Id = userSignupModal.UserId,
@@ -103,7 +105,7 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
         {
             using (var connection = _dapperContext.CreateConnection())
             {
-                var query = "UP_ValidateUserLogin";
+                var query = SharedProcedure.ValidatingEmailAndPassword;
 
                 var param = new { emailAndPassword.Email, emailAndPassword.Password };
 
