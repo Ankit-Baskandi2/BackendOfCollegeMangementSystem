@@ -28,7 +28,7 @@ namespace CollegeManagmentSystemAssignment.Domain.Entity
         [Required(ErrorMessage = "Gender is required")]
         public bool Gender { get; set; }
 
-        [Required(ErrorMessage = "Emai is required")]
+        [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Enter Valid Email")]
         public string? Email { get; set; }
 
