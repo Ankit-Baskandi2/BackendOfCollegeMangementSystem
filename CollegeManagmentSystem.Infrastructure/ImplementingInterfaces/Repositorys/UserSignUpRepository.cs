@@ -50,25 +50,42 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
 
         public void DeleteRecord(int id)
         {
-            using(var connection = _dapperContext.CreateConnection())
+            try
             {
-                var query = SharedProcedure.DelteSignUpDetails;
-                var param = new
+                using (var connection = _dapperContext.CreateConnection())
                 {
-                    Id = id,
-                };
+                    var query = SharedProcedure.DelteSignUpDetails;
+                    var param = new
+                    {
+                        Id = id,
+                    };
 
-                connection.ExecuteAsync(query, param, commandType: CommandType.StoredProcedure);
+                    connection.ExecuteAsync(query, param, commandType: CommandType.StoredProcedure);
+                }
             }
+            catch(Exception ex) 
+            {
+                Console.WriteLine(ex.Message);
+            }
+
         }
 
         public async Task<IEnumerable<UserSignupModal>> GetAllSignUpDetails()
         {
-           using(var connection = _dapperContext.CreateConnection())
+            try
             {
-                var query = SharedProcedure.GetAllSignUpDetails;
-                return await connection.QueryAsync<UserSignupModal>(query, commandType: CommandType.StoredProcedure);
+                using (var connection = _dapperContext.CreateConnection())
+                {
+                    var query = SharedProcedure.GetAllSignUpDetails;
+                    return await connection.QueryAsync<UserSignupModal>(query, commandType: CommandType.StoredProcedure);
+                }
             }
+            catch( Exception ex )
+            {
+                Console.WriteLine(ex.Message);
+                return Enumerable.Empty<UserSignupModal>();
+            }
+
         }
 
         public async Task<bool> UpdateSignUpDetails(UserSignupModal userSignupModal)
@@ -103,15 +120,24 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
 
         public async Task<int> ValidatingUserEmailAndPassword(EmailAndPasswordModal emailAndPassword)
         {
-            using (var connection = _dapperContext.CreateConnection())
+            try
             {
-                var query = SharedProcedure.ValidatingEmailAndPassword;
+                using (var connection = _dapperContext.CreateConnection())
+                {
+                    var query = SharedProcedure.ValidatingEmailAndPassword;
 
-                var param = new { emailAndPassword.Email, emailAndPassword.Password };
+                    var param = new { emailAndPassword.Email, emailAndPassword.Password };
 
-                var result = await connection.QueryFirstOrDefaultAsync<int>(query, param, commandType: CommandType.StoredProcedure);
-                return result;
+                    var result = await connection.QueryFirstOrDefaultAsync<int>(query, param, commandType: CommandType.StoredProcedure);
+                    return result;
+                }
             }
+            catch(Exception ex) 
+            {
+                Console.WriteLine(ex.Message);
+                return 0;
+            }
+
         }
     }
 }
