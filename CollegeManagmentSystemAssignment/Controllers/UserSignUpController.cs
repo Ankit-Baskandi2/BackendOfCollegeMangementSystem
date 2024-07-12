@@ -13,8 +13,8 @@ namespace CollegeManagmentSystemAssignment.Controllers
         public UserSignUpController(IUserSignUpService userSignUpService)
         {
             _userSignUpService = userSignUpService;
+            
         }
-
 
         [HttpGet]
         public async Task<IActionResult> GetAllUserSignUpDetails()
@@ -27,7 +27,10 @@ namespace CollegeManagmentSystemAssignment.Controllers
         public async Task<IActionResult> SavingDetails([FromBody] UserSignupModal userSignupModal)
         {
             if (!ModelState.IsValid) return BadRequest();
-            return Ok(await _userSignUpService.SaveSignUpDetails(userSignupModal));
+            var result = await _userSignUpService.SaveSignUpDetails(userSignupModal);
+            if(result == 2)
+                return Ok(new ResponseModal { StatusCode = 200, Data = null, Message = "Data Saved Submitted" });
+            return BadRequest(new ResponseModal { StatusCode = 401, Message = "Something Went Wrong", Data = null});
         }
 
         [HttpPut]
@@ -49,8 +52,9 @@ namespace CollegeManagmentSystemAssignment.Controllers
             if (!ModelState.IsValid) BadRequest();
             var result = await _userSignUpService.ValidatingUserEmailAndPassword(emailAndPassword);
 
-            if (result == 0) return Unauthorized(new { Message = "Incorrect Email and Password" });
-            return Ok(result);
+            if (result == 0) return Unauthorized(new ResponseModal { StatusCode = 401,
+                Message = "Enter Correct Email And Password", Data = null});
+            return Ok(new ResponseModal { StatusCode = 200, Message = "Welcome", Data = null });
         }
     }
 }

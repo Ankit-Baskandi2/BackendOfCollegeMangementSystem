@@ -54,6 +54,7 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
             {
                 using (var connection = _dapperContext.CreateConnection())
                 {
+                    connection.Open();
                     var query = SharedProcedure.DelteSignUpDetails;
                     var param = new
                     {
@@ -61,6 +62,7 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
                     };
 
                     connection.ExecuteAsync(query, param, commandType: CommandType.StoredProcedure);
+                    connection.Close();
                 }
             }
             catch(Exception ex) 
