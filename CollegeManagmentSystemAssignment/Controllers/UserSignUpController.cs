@@ -1,5 +1,6 @@
 ﻿using CollegeManagmentSystem.Application.Interfaces.IServices;
 using CollegeManagmentSystemAssignment.Domain.Entity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CollegeManagmentSystemAssignment.Controllers
@@ -10,10 +11,9 @@ namespace CollegeManagmentSystemAssignment.Controllers
     {
         private readonly IUserSignUpService _userSignUpService;
 
-        public UserSignUpController(IUserSignUpService userSignUpService)
+        public UserSignUpController(IUserSignUpService userSignUpService, IConfiguration config)
         {
             _userSignUpService = userSignUpService;
-            
         }
 
         [HttpGet]
@@ -46,15 +46,22 @@ namespace CollegeManagmentSystemAssignment.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [Route("UserValidation")]
         public async Task<IActionResult> UserValidation([FromBody] EmailAndPasswordModal emailAndPassword)
         {
-            if (!ModelState.IsValid) BadRequest();
+            if (!ModelState.IsValid)
+                BadRequest(new ResponseModal { StatusCode = 500, Message="Please Fill Email and Password", Data = null});
+
             var result = await _userSignUpService.ValidatingUserEmailAndPassword(emailAndPassword);
 
-            if (result == 0) return Unauthorized(new ResponseModal { StatusCode = 401,
-                Message = "Enter Correct Email And Password", Data = null});
-            return Ok(new ResponseModal { StatusCode = 200, Message = "Welcome", Data = null });
+            if(result == 1)
+            {
+                var token = _userSignUpService.GenerateToken(emailAndPassword);
+                return Ok(new ResponseModal { StatusCode = 200, Message = "Login Successful", Data = token });
+            }
+            return BadRequest(new ResponseModal { StatusCode = 500, Message = "Incorrect Email and Password", Data=null});
         }
+
     }
 }

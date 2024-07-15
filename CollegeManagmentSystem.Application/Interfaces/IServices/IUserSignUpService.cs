@@ -9,5 +9,6 @@ namespace CollegeManagmentSystem.Application.Interfaces.IServices
         void DeleteRecord(int id);
         Task<bool> UpdateSignUpDetails(UserSignupModal userSignupModal);
         Task<int> ValidatingUserEmailAndPassword(EmailAndPasswordModal emailAndPassword);
+        string GenerateToken(EmailAndPasswordModal userEmailAndPassword);
     }
 }
