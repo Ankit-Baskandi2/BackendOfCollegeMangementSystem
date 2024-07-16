@@ -16,7 +16,7 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
             _dapperContext = dapperContext;
         }
 
-        public async Task<int> CreateSignUp(UserSignupModal userSignupModal)
+        public async Task<ResponseModal> CreateSignUp(UserSignupModal userSignupModal)
         {
             try
             {
@@ -37,18 +37,18 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
                         userSignupModal.Password
                     };
 
-                    var message = await connection.ExecuteAsync(query, parameter, commandType: CommandType.StoredProcedure);
-                    return message;
+                    await connection.ExecuteAsync(query, parameter, commandType: CommandType.StoredProcedure);
+                    return new ResponseModal { Data = StaticData.data, Message = StaticData.CreateSuccessMessage, StatusCode = StaticData.statusCode};
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return 0;
+                return new ResponseModal { Data = StaticData.data, Message = StaticData.errorMessage, StatusCode = StaticData.errorStatusCode };
             }
         }
 
-        public void DeleteRecord(int id)
+        public async Task<ResponseModal> DeleteRecord(int id)
         {
             try
             {
@@ -61,13 +61,15 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
                         Id = id,
                     };
 
-                    connection.ExecuteAsync(query, param, commandType: CommandType.StoredProcedure);
+                    await connection.ExecuteAsync(query, param, commandType: CommandType.StoredProcedure);
                     connection.Close();
+                    return new ResponseModal { Data = StaticData.data, Message = StaticData.deleteSuccessMessage, StatusCode = StaticData.statusCode };
                 }
             }
             catch(Exception ex) 
             {
                 Console.WriteLine(ex.Message);
+                return new ResponseModal { Data = StaticData.data, Message = StaticData.errorMessage, StatusCode = StaticData.errorStatusCode };
             }
 
         }
@@ -90,7 +92,7 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
 
         }
 
-        public async Task<bool> UpdateSignUpDetails(UserSignupModal userSignupModal)
+        public async Task<ResponseModal> UpdateSignUpDetails(UserSignupModal userSignupModal)
         {
             try
             {
@@ -110,13 +112,13 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
                         userSignupModal.Gender,
                     };
                     await connnection.ExecuteAsync(query, param, commandType: CommandType.StoredProcedure);
-                    return true;
+                    return new ResponseModal { StatusCode = StaticData.statusCode, Data = StaticData.data, Message = StaticData.UpdateSuccessMessage };
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return false;
+                return new ResponseModal { StatusCode = StaticData.errorStatusCode, Data = StaticData.data, Message = StaticData.errorMessage };
             }
         }
 
@@ -130,8 +132,8 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
 
                     var param = new { emailAndPassword.Email, emailAndPassword.Password };
 
-                    var result = await connection.QueryFirstOrDefaultAsync<int>(query, param, commandType: CommandType.StoredProcedure);
-                    return result;
+                    return await connection.QueryFirstOrDefaultAsync<int>(query, param, commandType: CommandType.StoredProcedure);
+                    
                 }
             }
             catch(Exception ex) 

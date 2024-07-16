@@ -24,20 +24,19 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Services
             return await _userSignUpRepository.GetAllSignUpDetails();
         }
 
-        public async Task<int> SaveSignUpDetails(UserSignupModal userSignupModal)
+        public async Task<ResponseModal> SaveSignUpDetails(UserSignupModal userSignupModal)
         {
             return await _userSignUpRepository.CreateSignUp(userSignupModal);
-            //return message;
         }
 
-        public async Task<bool> UpdateSignUpDetails(UserSignupModal userSignupModal)
+        public async Task<ResponseModal> UpdateSignUpDetails(UserSignupModal userSignupModal)
         {
             return await _userSignUpRepository.UpdateSignUpDetails(userSignupModal);
         }
 
-        public void DeleteRecord(int id)
+        public async Task<ResponseModal> DeleteRecord(int id)
         {
-            _userSignUpRepository.DeleteRecord(id);
+            return await _userSignUpRepository.DeleteRecord(id);
         }
 
         public async Task<int> ValidatingUserEmailAndPassword(EmailAndPasswordModal emailAndPassword)

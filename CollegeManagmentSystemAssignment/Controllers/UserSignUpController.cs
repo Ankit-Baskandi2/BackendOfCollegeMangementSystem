@@ -11,7 +11,7 @@ namespace CollegeManagmentSystemAssignment.Controllers
     {
         private readonly IUserSignUpService _userSignUpService;
 
-        public UserSignUpController(IUserSignUpService userSignUpService, IConfiguration config)
+        public UserSignUpController(IUserSignUpService userSignUpService)
         {
             _userSignUpService = userSignUpService;
         }
@@ -27,22 +27,20 @@ namespace CollegeManagmentSystemAssignment.Controllers
         public async Task<IActionResult> SavingDetails([FromBody] UserSignupModal userSignupModal)
         {
             if (!ModelState.IsValid) return BadRequest();
-            var result = await _userSignUpService.SaveSignUpDetails(userSignupModal);
-            if(result == 2)
-                return Ok(new ResponseModal { StatusCode = 200, Data = null, Message = "Data Saved Submitted" });
-            return BadRequest(new ResponseModal { StatusCode = 401, Message = "Something Went Wrong", Data = null});
+            return Ok(await _userSignUpService.SaveSignUpDetails(userSignupModal));
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdatingSignUpDetails(UserSignupModal userSignupModal)
         {
+            if (!ModelState.IsValid) return BadRequest();
             return Ok(await _userSignUpService.UpdateSignUpDetails(userSignupModal));
         }
 
         [HttpDelete]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _userSignUpService.DeleteRecord(id);
+            return Ok(await _userSignUpService.DeleteRecord(id));
         }
 
         [HttpPost]
@@ -58,7 +56,7 @@ namespace CollegeManagmentSystemAssignment.Controllers
             if(result == 1)
             {
                 var token = _userSignUpService.GenerateToken(emailAndPassword);
-                return Ok(new ResponseModal { StatusCode = 200, Message = StaticData.StaticDataKey, Data = token });
+                return Ok(new ResponseModal { StatusCode = 200, Message = StaticData.successMessage, Data = token });
             }
             return BadRequest(new ResponseModal { StatusCode = 500, Message = "Incorrect Email and Password", Data=null});
         }
