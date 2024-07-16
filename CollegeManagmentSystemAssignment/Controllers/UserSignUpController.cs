@@ -62,6 +62,5 @@ namespace CollegeManagmentSystemAssignment.Controllers
             }
             return BadRequest(new ResponseModal { StatusCode = 500, Message = "Incorrect Email and Password", Data=null});
         }
-
     }
 }
