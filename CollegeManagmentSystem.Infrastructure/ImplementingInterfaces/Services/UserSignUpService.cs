@@ -26,8 +26,8 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Services
 
         public async Task<int> SaveSignUpDetails(UserSignupModal userSignupModal)
         {
-            var message = await _userSignUpRepository.CreateSignUp(userSignupModal);
-            return message;
+            return await _userSignUpRepository.CreateSignUp(userSignupModal);
+            //return message;
         }
 
         public async Task<bool> UpdateSignUpDetails(UserSignupModal userSignupModal)

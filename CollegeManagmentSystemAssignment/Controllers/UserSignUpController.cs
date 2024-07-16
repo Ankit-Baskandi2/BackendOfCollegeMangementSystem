@@ -58,7 +58,7 @@ namespace CollegeManagmentSystemAssignment.Controllers
             if(result == 1)
             {
                 var token = _userSignUpService.GenerateToken(emailAndPassword);
-                return Ok(new ResponseModal { StatusCode = 200, Message = "Login Successful", Data = token });
+                return Ok(new ResponseModal { StatusCode = 200, Message = StaticData.StaticDataKey, Data = token });
             }
             return BadRequest(new ResponseModal { StatusCode = 500, Message = "Incorrect Email and Password", Data=null});
         }

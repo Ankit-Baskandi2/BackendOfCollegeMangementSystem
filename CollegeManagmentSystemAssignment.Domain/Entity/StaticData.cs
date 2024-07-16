@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace CollegeManagmentSystemAssignment.Domain.Entity
 {
-    internal class StaticData
+    public static class StaticData
     {
+        public static string StaticDataKey = "Login Successful";
     }
 }
