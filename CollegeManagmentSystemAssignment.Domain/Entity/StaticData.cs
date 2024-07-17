@@ -15,6 +15,6 @@ namespace CollegeManagmentSystemAssignment.Domain.Entity
         public static string CreateSuccessMessage = "Data Added Successfully";
         public static int statusCode = 200;
         public static int errorStatusCode = 500;
-        public static string data = null;
+        public static object? data = null;
     }
 }

@@ -74,20 +74,21 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
 
         }
 
-        public async Task<IEnumerable<UserSignupModal>> GetAllSignUpDetails()
+        public async Task<ResponseModal> GetAllSignUpDetails()
         {
             try
             {
                 using (var connection = _dapperContext.CreateConnection())
                 {
                     var query = SharedProcedure.GetAllSignUpDetails;
-                    return await connection.QueryAsync<UserSignupModal>(query, commandType: CommandType.StoredProcedure);
+                    var result = await connection.QueryAsync<UserSignupModal>(query, commandType: CommandType.StoredProcedure);
+                    return new ResponseModal { StatusCode = StaticData.statusCode, Message = StaticData.CreateSuccessMessage, Data = result };
                 }
             }
             catch( Exception ex )
             {
                 Console.WriteLine(ex.Message);
-                return Enumerable.Empty<UserSignupModal>();
+                return new ResponseModal { StatusCode = StaticData.errorStatusCode, Message = StaticData.errorMessage, Data = null };
             }
 
         }

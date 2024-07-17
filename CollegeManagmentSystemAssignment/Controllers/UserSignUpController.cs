@@ -1,4 +1,5 @@
 ﻿using CollegeManagmentSystem.Application.Interfaces.IServices;
+using CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Services;
 using CollegeManagmentSystemAssignment.Domain.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,12 @@ namespace CollegeManagmentSystemAssignment.Controllers
     public class UserSignUpController : ControllerBase
     {
         private readonly IUserSignUpService _userSignUpService;
+        private readonly IConfiguration _config;
 
-        public UserSignUpController(IUserSignUpService userSignUpService)
+        public UserSignUpController(IUserSignUpService userSignUpService, IConfiguration config)
         {
             _userSignUpService = userSignUpService;
+            _config = config;
         }
 
         [HttpGet]
@@ -49,16 +52,17 @@ namespace CollegeManagmentSystemAssignment.Controllers
         public async Task<IActionResult> UserValidation([FromBody] EmailAndPasswordModal emailAndPassword)
         {
             if (!ModelState.IsValid)
-                BadRequest(new ResponseModal { StatusCode = 500, Message="Please Fill Email and Password", Data = null});
+                BadRequest(new ResponseModal { StatusCode = StaticData.errorStatusCode, Message = StaticData.errorMessage, Data = StaticData.data});
 
             var result = await _userSignUpService.ValidatingUserEmailAndPassword(emailAndPassword);
 
             if(result == 1)
             {
-                var token = _userSignUpService.GenerateToken(emailAndPassword);
-                return Ok(new ResponseModal { StatusCode = 200, Message = StaticData.successMessage, Data = token });
+                TokenGenerationService tokenGeneration = new TokenGenerationService(_config);
+                var token = tokenGeneration.GenerateToken(emailAndPassword);
+                return Ok(new ResponseModal { StatusCode = StaticData.statusCode, Message = StaticData.successMessage, Data = token });
             }
-            return BadRequest(new ResponseModal { StatusCode = 500, Message = "Incorrect Email and Password", Data=null});
+            return BadRequest(new ResponseModal { StatusCode = StaticData.errorStatusCode, Message = StaticData.errorMessage, Data = StaticData.data});
         }
     }
 }
