@@ -8,6 +8,7 @@ namespace CollegeManagmentSystemAssignment.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+ 
     public class UserSignUpController : ControllerBase
     {
         private readonly IUserSignUpService _userSignUpService;
