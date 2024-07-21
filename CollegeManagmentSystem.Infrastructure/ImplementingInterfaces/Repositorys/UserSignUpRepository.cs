@@ -1,6 +1,7 @@
 ﻿using CollegeManagmentSystem.Application.Interfaces.IRepositorys;
 using CollegeManagmentSystem.Application.ProcedureName;
 using CollegeManagmentSystem.Infrastructure.Data;
+using CollegeManagmentSystemAssignment.Domain.EncriptionAndDecription;
 using CollegeManagmentSystemAssignment.Domain.Entity;
 using Dapper;
 using System.Data;
@@ -23,7 +24,7 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
                 using (var connection = _dapperContext.CreateConnection())
                 {
                     var query = SharedProcedure.UpdateAndSaveSignUpDetails;
-
+                    var encryptedPass = EncriptionAndDecription.EncryptData(userSignupModal.Password);
                     var parameter = new
                     {
                         Id = userSignupModal.UserId,
@@ -34,7 +35,7 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
                         userSignupModal.State,
                         userSignupModal.Gender,
                         userSignupModal.Email,
-                        userSignupModal.Password
+                        Password = encryptedPass
                     };
 
                     await connection.ExecuteAsync(query, parameter, commandType: CommandType.StoredProcedure);
@@ -130,8 +131,10 @@ namespace CollegeManagmentSystem.Infrastructure.ImplementingInterfaces.Repositor
                 using (var connection = _dapperContext.CreateConnection())
                 {
                     var query = SharedProcedure.ValidatingEmailAndPassword;
+                    var encryptPass = EncriptionAndDecription.EncryptData(emailAndPassword.Password);
 
-                    var param = new { emailAndPassword.Email, emailAndPassword.Password };
+                    //var param = new { emailAndPassword.Email, emailAndPassword.Password };
+                    var param = new { emailAndPassword.Email, Password = encryptPass };
 
                     return await connection.QueryFirstOrDefaultAsync<int>(query, param, commandType: CommandType.StoredProcedure);
                     
